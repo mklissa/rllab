@@ -14,6 +14,8 @@ import os
 import mako.template
 import mako.lookup
 
+import rllab.envs.mujoco.seeding
+
 MODEL_DIR = osp.abspath(
     osp.join(
         osp.dirname(__file__),
@@ -222,6 +224,7 @@ class MujocoEnv(Env):
     def release(self):
         # temporarily alleviate the issue (but still some leak)
         from rllab.mujoco_py.mjlib import mjlib
+        # from mujoco_py.mjlib import mjlib
         mjlib.mj_deleteModel(self.model._wrapped)
         mjlib.mj_deleteData(self.data._wrapped)
 
@@ -243,3 +246,4 @@ class MujocoEnv(Env):
 
     def action_from_key(self, key):
         raise NotImplementedError
+

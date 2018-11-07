@@ -24,11 +24,11 @@ if [ ! -f vendor/mujoco/$mujoco_file ]; then
     dir=`$mktemp_cmd`
     unzip $path -d $dir
     if [ ! -f $dir/mjpro131/bin/$mujoco_file ]; then
-        echo "mjpro/$mujoco_file not found. Make sure you have the correct file (most likely named $zip_file)"
+        echo "mjpro/bin/$mujoco_file not found. Make sure you have the correct file (most likely named $zip_file)"
         exit 0
     fi
     if [ ! -f $dir/mjpro131/bin/$glfw_file ]; then
-        echo "mjpro/$glfw_file not found. Make sure you have the correct file (most likely named $zip_file)"
+        echo "mjpro/bin/$glfw_file not found. Make sure you have the correct file (most likely named $zip_file)"
         exit 0
     fi
 

@@ -12,7 +12,7 @@ from lasagne.updates import adam
 # within the range [-1, 1] (only works for environments with continuous actions)
 env = normalize(CartpoleEnv())
 # Initialize a neural network policy with a single hidden layer of 8 hidden units
-policy = GaussianMLPPolicy(env.spec, hidden_sizes=(8,))
+policy = GaussianGRUPolicy(env.spec)
 # Initialize a linear baseline estimator using default hand-crafted features
 baseline = LinearFeatureBaseline(env.spec)
 
@@ -48,7 +48,7 @@ advantages_var = TT.vector('advantages')
 # policy.dist_info_sym returns a dictionary, whose values are symbolic expressions for quantities related to the
 # distribution of the actions. For a Gaussian policy, it contains the mean and (log) standard deviation.
 dist_info_vars = policy.dist_info_sym(observations_var)
-
+pdb.set_trace()
 # policy.distribution returns a distribution object under rllab.distributions. It contains many utilities for computing
 # distribution-related quantities, given the computed dist_info_vars. Below we use dist.log_likelihood_sym to compute
 # the symbolic log-likelihood. For this example, the corresponding distribution is an instance of the class

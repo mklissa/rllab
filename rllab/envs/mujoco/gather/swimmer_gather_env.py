@@ -4,5 +4,7 @@ from rllab.envs.mujoco.swimmer_env import SwimmerEnv
 
 class SwimmerGatherEnv(GatherEnv):
 
+
+    NAME= "SwimmerGatherEnv"
     MODEL_CLASS = SwimmerEnv
     ORI_IND = 2

@@ -16,7 +16,7 @@ from rllab.misc import autoargs
 from rllab.misc.overrides import overrides
 from rllab.mujoco_py import MjViewer, MjModel, mjcore, mjlib, \
     mjextra, glfw
-
+import rllab.envs.mujoco.seeding as seeding
 APPLE = 0
 BOMB = 1
 
@@ -190,6 +190,7 @@ class GatherEnv(ProxyEnv, Serializable):
         attrs = dict(
             type="box", conaffinity="1", rgba="0.8 0.9 0.8 1", condim="3"
         )
+        # import pdb;pdb.set_trace()
         walldist = self.activity_range + 1
         ET.SubElement(
             worldbody, "geom", dict(
@@ -214,7 +215,7 @@ class GatherEnv(ProxyEnv, Serializable):
                 attrs,
                 name="wall4",
                 pos="%d 0 0" % walldist,
-                size="0.5 %d.5 1" % walldist))
+                size="0.5 %d.5 1" % walldist))       
         _, file_path = tempfile.mkstemp(text=True)
         tree.write(file_path)
         # pylint: disable=not-callable
@@ -238,6 +239,7 @@ class GatherEnv(ProxyEnv, Serializable):
             typ = APPLE
             self.objects.append((x, y, typ))
             existing.add((x, y))
+            
         while len(self.objects) < self.n_apples + self.n_bombs:
             x = np.random.randint(-self.activity_range / 2,
                                   self.activity_range / 2) * 2
@@ -252,11 +254,13 @@ class GatherEnv(ProxyEnv, Serializable):
             self.objects.append((x, y, typ))
             existing.add((x, y))
 
+        self.STEP = 0
         if also_wrapped:
             self.wrapped_env.reset()
         return self.get_current_obs()
 
     def step(self, action):
+        
         _, inner_rew, done, info = self.wrapped_env.step(action)
         info['inner_rew'] = inner_rew
         info['outer_rew'] = 0
@@ -279,7 +283,11 @@ class GatherEnv(ProxyEnv, Serializable):
             else:
                 new_objs.append(obj)
         self.objects = new_objs
-        done = len(self.objects) == 0
+        self.STEP +=1
+        done = len(self.objects) == 0 or self.STEP >= 600
+        # import pdb;pdb.set_trace()
+
+        # print(self.wrapped_env.STEP)
         return Step(self.get_current_obs(), reward, done, **info)
 
     def get_readings(self):  # equivalent to get_current_maze_obs in maze_env.py
@@ -429,3 +437,5 @@ class GatherEnv(ProxyEnv, Serializable):
 
 
 
+    def seed(self, seed=None):
+        self.np_random, seed = seeding.np_random(seed)

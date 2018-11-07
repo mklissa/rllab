@@ -15,10 +15,12 @@ from rllab.misc.overrides import overrides
 
 from rllab.misc import logger
 
+import rllab.envs.mujoco.seeding as seeding
 
 class MazeEnv(ProxyEnv, Serializable):
     MODEL_CLASS = None
     ORI_IND = None
+
 
     MAZE_HEIGHT = None
     MAZE_SIZE_SCALING = None
@@ -38,7 +40,9 @@ class MazeEnv(ProxyEnv, Serializable):
             n_bins=20,
             sensor_range=10.,
             sensor_span=math.pi,
+
             maze_id=0,
+
             length=1,
             maze_height=0.5,
             maze_size_scaling=2,
@@ -57,6 +61,7 @@ class MazeEnv(ProxyEnv, Serializable):
         self.coef_inner_rew = coef_inner_rew
         self.goal_rew = goal_rew
 
+        # import pdb;pdb.set_trace()
         model_cls = self.__class__.MODEL_CLASS
         if model_cls is None:
             raise "MODEL_CLASS unspecified!"
@@ -64,7 +69,9 @@ class MazeEnv(ProxyEnv, Serializable):
         tree = ET.parse(xml_path)
         worldbody = tree.find(".//worldbody")
 
-        self.MAZE_HEIGHT = height = maze_height
+        # import pdb;pdb.set_trace()
+        height=self.MAZE_HEIGHT
+        # self.MAZE_HEIGHT = height = maze_height
         self.MAZE_SIZE_SCALING = size_scaling = maze_size_scaling
         self.MAZE_STRUCTURE = structure = construct_maze(maze_id=self._maze_id, length=self.length)
 
@@ -119,6 +126,7 @@ class MazeEnv(ProxyEnv, Serializable):
         self._goal_range = self._find_goal_range()
         self._cached_segments = None
 
+        # import pdb;pdb.set_trace()
         inner_env = model_cls(*args, file_path=file_path, **kwargs)  # file to the robot specifications
         ProxyEnv.__init__(self, inner_env)  # here is where the robot env will be initialized
 
@@ -284,7 +292,7 @@ class MazeEnv(ProxyEnv, Serializable):
             new_pos = self.wrapped_env.get_xy()
             if self._is_in_collision(new_pos):
                 self.wrapped_env.set_xy(old_pos)
-                done = False
+                # done = False
         else:
             inner_next_obs, inner_rew, done, info = self.wrapped_env.step(action)
         next_obs = self.get_current_obs()
@@ -324,3 +332,8 @@ class MazeEnv(ProxyEnv, Serializable):
             wrapped_undiscounted_return = np.mean([np.sum(path['env_infos']['inner_rew']) for path in paths])
             logger.record_tabular('AverageReturn', wrapped_undiscounted_return)
             self.wrapped_env.log_diagnostics(stripped_paths, *args, **kwargs)
+
+
+
+    def seed(self, seed=None):
+        self.np_random, seed = seeding.np_random(seed)

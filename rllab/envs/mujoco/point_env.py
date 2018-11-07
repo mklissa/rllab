@@ -5,6 +5,7 @@ from rllab.misc.overrides import overrides
 import numpy as np
 import math
 from rllab.mujoco_py import glfw
+# from mujoco_py import glfw
 
 
 class PointEnv(MujocoEnv, Serializable):
@@ -14,25 +15,36 @@ class PointEnv(MujocoEnv, Serializable):
     """
 
     FILE = 'point.xml'
+    STEP=0
 
     def __init__(self, *args, **kwargs):
         super(PointEnv, self).__init__(*args, **kwargs)
         Serializable.quick_init(self, locals())
 
     def step(self, action):
+        self.STEP+=1
         qpos = np.copy(self.model.data.qpos)
-        qpos[2, 0] += action[1]
+        qpos[2, 0] += action[1]/3.
         ori = qpos[2, 0]
         # compute increment in each direction
-        dx = math.cos(ori) * action[0]
-        dy = math.sin(ori) * action[0]
+        dx = math.cos(ori) * action[0]/3.
+        dy = math.sin(ori) * action[0]/3.
         # ensure that the robot is within reasonable range
         qpos[0, 0] = np.clip(qpos[0, 0] + dx, -7, 7)
         qpos[1, 0] = np.clip(qpos[1, 0] + dy, -7, 7)
         self.model.data.qpos = qpos
         self.model.forward()
         next_obs = self.get_current_obs()
-        return Step(next_obs, 0, False)
+
+        # if self.STEP>=300:
+        #     done=True
+        #     self.STEP=0
+        # else:
+        #     done=False
+
+        done=False        
+
+        return Step(next_obs, 0, done)
 
     def get_xy(self):
         qpos = self.model.data.qpos

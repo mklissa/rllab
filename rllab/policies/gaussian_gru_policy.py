@@ -12,14 +12,14 @@ from rllab.distributions.recurrent_diagonal_gaussian import RecurrentDiagonalGau
 from rllab.misc import ext
 from rllab.misc.overrides import overrides
 from rllab.policies.base import StochasticPolicy
-
+import pdb
 
 class GaussianGRUPolicy(StochasticPolicy, LasagnePowered):
     def __init__(
             self,
             env_spec,
             hidden_sizes=(32,),
-            state_include_action=True,
+            state_include_action=False,
             hidden_nonlinearity=NL.tanh,
             learn_std=True,
             init_std=1.0,
@@ -41,6 +41,7 @@ class GaussianGRUPolicy(StochasticPolicy, LasagnePowered):
         else:
             obs_dim = env_spec.observation_space.flat_dim
         action_dim = env_spec.action_space.flat_dim
+
 
         mean_network = GRUNetwork(
             input_shape=(obs_dim,),
@@ -95,7 +96,7 @@ class GaussianGRUPolicy(StochasticPolicy, LasagnePowered):
         LasagnePowered.__init__(self, [mean_network.output_layer, l_log_std])
 
     @overrides
-    def dist_info_sym(self, obs_var, state_info_vars):
+    def dist_info_sym(self, obs_var):
         n_batches, n_steps = obs_var.shape[:2]
         obs_var = obs_var.reshape((n_batches, n_steps, -1))
         if self._state_include_action:

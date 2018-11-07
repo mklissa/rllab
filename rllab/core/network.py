@@ -11,7 +11,7 @@ from rllab.core.lasagne_powered import LasagnePowered
 from rllab.core.serializable import Serializable
 
 import numpy as np
-
+import pdb
 
 def wrapped_conv(*args, **kwargs):
     copy = dict(kwargs)
@@ -155,9 +155,11 @@ class GRULayer(L.Layer):
         return h.astype(theano.config.floatX)
 
     def get_step_layer(self, l_in, l_prev_hidden):
+
         return GRUStepLayer(incomings=[l_in, l_prev_hidden], gru_layer=self)
 
     def get_output_shape_for(self, input_shape):
+
         n_batch, n_steps = input_shape[:2]
         return n_batch, n_steps, self.num_units
 
@@ -182,8 +184,9 @@ class GRUStepLayer(L.MergeLayer):
         return self._gru_layer.get_params(**tags)
 
     def get_output_shape_for(self, input_shapes):
+
         n_batch = input_shapes[0]
-        return n_batch, self._gru_layer.num_units
+        return (*n_batch,self._gru_layer.num_units)
 
     def get_output_for(self, inputs, **kwargs):
         x, hprev = inputs
@@ -220,6 +223,8 @@ class GRUNetwork(object):
             extras=[l_in]
         )
         l_step_hidden = l_gru.get_step_layer(l_step_input, l_step_prev_hidden)
+
+
         l_step_output = L.DenseLayer(
             l_step_hidden,
             num_units=output_dim,

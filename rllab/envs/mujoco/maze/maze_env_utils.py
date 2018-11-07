@@ -102,11 +102,13 @@ def construct_maze(maze_id=0, length=1):
         if length != 1:
             raise NotImplementedError("Maze_id 0 only has length 1!")
         structure = [
-            [1, 1, 1, 1, 1],
-            [1, 'r', 0, 0, 1],
-            [1, 1, 1, 0, 1],
-            [1, 'g', 0, 0, 1],
-            [1, 1, 1, 1, 1],
+            [1, 1, 1,1, 1, 1],
+            [1, 'r',0, 0, 0, 1],
+            [1, 1, 1,1, 0, 1],
+            [1, 1, 1,1, 0, 1],
+            [1, 1, 1,1, 0, 1],
+            [1, 'g',0, 0, 0, 1],
+            [1, 1, 1,1, 1, 1],
         ]
     elif maze_id == 1:  # donuts maze: can reach the single goal by 2 equal paths
         c = length + 4
