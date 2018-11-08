@@ -284,7 +284,7 @@ class GatherEnv(ProxyEnv, Serializable):
                 new_objs.append(obj)
         self.objects = new_objs
         self.STEP +=1
-        done = len(self.objects) == 0 or self.STEP >= 600
+        done = len(self.objects) == 0 or self.STEP >= 1500
         # import pdb;pdb.set_trace()
 
         # print(self.wrapped_env.STEP)
@@ -337,6 +337,7 @@ class GatherEnv(ProxyEnv, Serializable):
 
     def get_current_obs(self):
         # return sensor data along with data about itself
+
         self_obs = self.wrapped_env.get_current_obs()
         apple_readings, bomb_readings = self.get_readings()
         return np.concatenate([self_obs, apple_readings, bomb_readings])
