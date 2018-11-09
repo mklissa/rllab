@@ -7,6 +7,7 @@ from rllab.envs.box2d.box2d_env import Box2DEnv
 from rllab.misc import autoargs
 from rllab.misc.overrides import overrides
 
+import rllab.envs.mujoco.seeding as seeding
 
 class MountainCarEnv(Box2DEnv, Serializable):
 
@@ -61,3 +62,7 @@ class MountainCarEnv(Box2DEnv, Serializable):
         else:
             return np.asarray([0])
 
+
+
+    def seed(self, seed=None):
+        self.np_random, seed = seeding.np_random(seed)
