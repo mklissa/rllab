@@ -32,7 +32,7 @@ class MountainCarEnv(Box2DEnv, Serializable):
     @overrides
     def compute_reward(self, action):
         yield
-        yield (-1 + self.height_bonus * self.cart.position[1])
+        yield self.is_current_done()
 
     @overrides
     def is_current_done(self):
