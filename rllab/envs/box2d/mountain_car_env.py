@@ -10,6 +10,7 @@ from rllab.misc.overrides import overrides
 import rllab.envs.mujoco.seeding as seeding
 
 class MountainCarEnv(Box2DEnv, Serializable):
+    NAME= "MountainCarEnv"
 
     @autoargs.inherit(Box2DEnv.__init__)
     @autoargs.arg("height_bonus_coeff", type=float,
