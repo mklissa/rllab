@@ -8,6 +8,7 @@ from rllab.misc import autoargs
 from rllab.misc.overrides import overrides
 
 import rllab.envs.mujoco.seeding as seeding
+from rllab.envs.base import Env, Step
 
 class MountainCarEnv(Box2DEnv, Serializable):
     NAME= "MountainCarEnv"
@@ -29,6 +30,7 @@ class MountainCarEnv(Box2DEnv, Serializable):
         self.goal_cart_pos = goal_cart_pos
         self.height_bonus = height_bonus
         self.cart = find_body(self.world, "cart")
+        self.steps = 0
         Serializable.quick_init(self, locals())
 
     @overrides
@@ -41,8 +43,34 @@ class MountainCarEnv(Box2DEnv, Serializable):
         return self.cart.position[0] >= self.goal_cart_pos \
             or abs(self.cart.position[0]) >= self.max_cart_pos
 
+
+    @overrides
+    def step(self, action):
+        """
+        Note: override this method with great care, as it post-processes the
+        observations, etc.
+        """
+        reward_computer = self.compute_reward(action)
+        # forward the state
+        action = self._inject_action_noise(action)
+        for _ in range(self.frame_skip):
+            self.forward_dynamics(action)
+        # notifies that we have stepped the world
+        next(reward_computer)
+        # actually get the reward
+        reward = next(reward_computer)
+        self._invalidate_state_caches()
+        self.steps += 1
+        done = self.is_current_done() or self.steps >=400
+        next_obs = self.get_current_obs()
+        
+
+        return Step(observation=next_obs, reward=reward, done=done)
+
+
     @overrides
     def reset(self):
+        self.steps = 0
         self._set_state(self.initial_state)
         self._invalidate_state_caches()
         bounds = np.array([
