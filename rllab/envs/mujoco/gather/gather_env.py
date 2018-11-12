@@ -162,7 +162,7 @@ class GatherEnv(ProxyEnv, Serializable):
             catch_range=1.,
             n_bins=10,
             sensor_range=6.,
-            sensor_span=math.pi,
+            sensor_span=2 * math.pi,
             coef_inner_rew=0.,
             dying_cost=-10,
             *args, **kwargs
@@ -284,7 +284,7 @@ class GatherEnv(ProxyEnv, Serializable):
                 new_objs.append(obj)
         self.objects = new_objs
         self.STEP +=1
-        done = len(self.objects) == 0 or self.STEP >= 1500
+        done = len(self.objects) == 0 or self.STEP >= 500
         # import pdb;pdb.set_trace()
 
         # print(self.wrapped_env.STEP)
