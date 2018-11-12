@@ -224,35 +224,36 @@ class GatherEnv(ProxyEnv, Serializable):
         ProxyEnv.__init__(self, inner_env)  # to access the inner env, do self.wrapped_env
 
     def reset(self, also_wrapped=True):
-        self.objects = []
-        existing = set()
-        while len(self.objects) < self.n_apples:
-            x = np.random.randint(-self.activity_range / 2,
-                                  self.activity_range / 2) * 2
-            y = np.random.randint(-self.activity_range / 2,
-                                  self.activity_range / 2) * 2
-            # regenerate, since it is too close to the robot's initial position
-            if x ** 2 + y ** 2 < self.robot_object_spacing ** 2:
-                continue
-            if (x, y) in existing:
-                continue
-            typ = APPLE
-            self.objects.append((x, y, typ))
-            existing.add((x, y))
-            
-        while len(self.objects) < self.n_apples + self.n_bombs:
-            x = np.random.randint(-self.activity_range / 2,
-                                  self.activity_range / 2) * 2
-            y = np.random.randint(-self.activity_range / 2,
-                                  self.activity_range / 2) * 2
-            # regenerate, since it is too close to the robot's initial position
-            if x ** 2 + y ** 2 < self.robot_object_spacing ** 2:
-                continue
-            if (x, y) in existing:
-                continue
-            typ = BOMB
-            self.objects.append((x, y, typ))
-            existing.add((x, y))
+        if not self.objects:
+            self.objects = []
+            existing = set()
+            while len(self.objects) < self.n_apples:
+                x = np.random.randint(-self.activity_range / 2,
+                                      self.activity_range / 2) * 2
+                y = np.random.randint(-self.activity_range / 2,
+                                      self.activity_range / 2) * 2
+                # regenerate, since it is too close to the robot's initial position
+                if x ** 2 + y ** 2 < self.robot_object_spacing ** 2:
+                    continue
+                if (x, y) in existing:
+                    continue
+                typ = APPLE
+                self.objects.append((x, y, typ))
+                existing.add((x, y))
+                
+            while len(self.objects) < self.n_apples + self.n_bombs:
+                x = np.random.randint(-self.activity_range / 2,
+                                      self.activity_range / 2) * 2
+                y = np.random.randint(-self.activity_range / 2,
+                                      self.activity_range / 2) * 2
+                # regenerate, since it is too close to the robot's initial position
+                if x ** 2 + y ** 2 < self.robot_object_spacing ** 2:
+                    continue
+                if (x, y) in existing:
+                    continue
+                typ = BOMB
+                self.objects.append((x, y, typ))
+                existing.add((x, y))
 
         self.STEP = 0
         if also_wrapped:
