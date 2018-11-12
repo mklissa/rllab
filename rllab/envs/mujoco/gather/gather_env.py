@@ -288,7 +288,7 @@ class GatherEnv(ProxyEnv, Serializable):
                 new_objs.append(obj)
         self.objects = new_objs
         self.STEP +=1
-        done = len(self.objects) == 0 or self.STEP >= 1000
+        done = len(self.objects) == 0 or self.STEP >= 1500
         # import pdb;pdb.set_trace()
 
         # print(self.wrapped_env.STEP)
