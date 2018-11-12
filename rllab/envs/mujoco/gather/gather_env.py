@@ -254,6 +254,9 @@ class GatherEnv(ProxyEnv, Serializable):
                 typ = BOMB
                 self.objects.append((x, y, typ))
                 existing.add((x, y))
+            self.orig_objects = self.objects.copy()
+        else:
+            self.objects = self.orig_objects.copy() 
 
         self.STEP = 0
         if also_wrapped:
@@ -285,7 +288,7 @@ class GatherEnv(ProxyEnv, Serializable):
                 new_objs.append(obj)
         self.objects = new_objs
         self.STEP +=1
-        done = len(self.objects) == 0 or self.STEP >= 500
+        done = len(self.objects) == 0 or self.STEP >= 1000
         # import pdb;pdb.set_trace()
 
         # print(self.wrapped_env.STEP)
