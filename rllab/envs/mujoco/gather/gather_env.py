@@ -157,11 +157,11 @@ class GatherEnv(ProxyEnv, Serializable):
             self,
             n_apples=8,
             n_bombs=8,
-            activity_range=6.,
+            activity_range=12.,
             robot_object_spacing=2.,
             catch_range=1.,
             n_bins=10,
-            sensor_range=6.,
+            sensor_range=12.,
             sensor_span=2 * math.pi,
             coef_inner_rew=0.,
             dying_cost=-10,
@@ -341,9 +341,10 @@ class GatherEnv(ProxyEnv, Serializable):
 
     def get_current_obs(self):
         # return sensor data along with data about itself
-
         self_obs = self.wrapped_env.get_current_obs()
         apple_readings, bomb_readings = self.get_readings()
+        if self.wrapped_env.__class__.__name__=="PointEnv":
+            return np.concatenate([apple_readings, bomb_readings])
         return np.concatenate([self_obs, apple_readings, bomb_readings])
 
     @property
