@@ -164,7 +164,7 @@ class GatherEnv(ProxyEnv, Serializable):
             sensor_range=12.,
             sensor_span=2 * math.pi,
             coef_inner_rew=0.,
-            dying_cost=-10,
+            dying_cost=0.,
             *args, **kwargs
     ):
         Serializable.quick_init(self, locals())
@@ -224,7 +224,7 @@ class GatherEnv(ProxyEnv, Serializable):
         ProxyEnv.__init__(self, inner_env)  # to access the inner env, do self.wrapped_env
 
     def reset(self, also_wrapped=True):
-        if not self.objects:
+        if not self.objects or True: # Change this line for deterministic positions
             self.objects = []
             existing = set()
             while len(self.objects) < self.n_apples:
@@ -291,7 +291,7 @@ class GatherEnv(ProxyEnv, Serializable):
         done = len(self.objects) == 0 or self.STEP >= 1500
         # import pdb;pdb.set_trace()
 
-        # print(self.wrapped_env.STEP)
+
         return Step(self.get_current_obs(), reward, done, **info)
 
     def get_readings(self):  # equivalent to get_current_maze_obs in maze_env.py
