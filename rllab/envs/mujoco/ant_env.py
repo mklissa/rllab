@@ -29,6 +29,7 @@ class AntEnv(MujocoEnv, Serializable):
         ]).reshape(-1)
 
     def step(self, action):
+        action*=10.
         self.forward_dynamics(action)
         comvel = self.get_body_comvel("torso")
         forward_reward = comvel[0]

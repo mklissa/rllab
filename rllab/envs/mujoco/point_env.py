@@ -30,8 +30,8 @@ class PointEnv(MujocoEnv, Serializable):
         dx = math.cos(ori) * action[0]/3.
         dy = math.sin(ori) * action[0]/3.
         # ensure that the robot is within reasonable range
-        qpos[0, 0] = np.clip(qpos[0, 0] + dx, -7, 7)
-        qpos[1, 0] = np.clip(qpos[1, 0] + dy, -7, 7)
+        qpos[0, 0] = qpos[0, 0] + dx
+        qpos[1, 0] = qpos[1, 0] + dy
         self.model.data.qpos = qpos
         self.model.forward()
         next_obs = self.get_current_obs()
