@@ -22,9 +22,10 @@ class AntEnv(MujocoEnv, Serializable):
         return np.concatenate([
             self.model.data.qpos.flat,
             self.model.data.qvel.flat,
-            np.clip(self.model.data.cfrc_ext, -1, 1).flat,
-            self.get_body_xmat("torso").flat,
-            self.get_body_com("torso"),
+
+            # np.clip(self.model.data.cfrc_ext, -1, 1).flat,
+            # self.get_body_xmat("torso").flat,
+            # self.get_body_com("torso"),
         ]).reshape(-1)
 
     def step(self, action):
