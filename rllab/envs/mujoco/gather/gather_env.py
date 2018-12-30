@@ -177,7 +177,7 @@ class GatherEnv(ProxyEnv, Serializable):
         self.sensor_range = sensor_range
         self.sensor_span = sensor_span
         self.coef_inner_rew = coef_inner_rew
-        self.dying_cost = dying_cost
+        self.334 = dying_cost
         self.objects = []
         self.viewer = None
         # super(GatherEnv, self).__init__(*args, **kwargs)
@@ -328,7 +328,7 @@ class GatherEnv(ProxyEnv, Serializable):
             half_span = self.sensor_span * 0.5
             if abs(angle) > half_span:
                 continue
-            bin_number = int((angle + half_span) / bin_res)
+            bin_number = int((angle + half_span) / bin_res) % 10
             intensity = 1.0 - dist / self.sensor_range
             if typ == APPLE:
                 apple_readings[bin_number] = intensity
