@@ -158,7 +158,7 @@ class GatherEnv(ProxyEnv, Serializable):
             n_apples=8,
             n_bombs=8,
             activity_range=12.,
-            robot_object_spacing=2.,
+            robot_object_spacing=5.,
             catch_range=1.,
             n_bins=10,
             sensor_range=12.,
