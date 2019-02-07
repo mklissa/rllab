@@ -177,7 +177,7 @@ class GatherEnv(ProxyEnv, Serializable):
         self.sensor_range = sensor_range
         self.sensor_span = sensor_span
         self.coef_inner_rew = coef_inner_rew
-        self.334 = dying_cost
+        self.dying_cost = dying_cost
         self.objects = []
         self.viewer = None
         # super(GatherEnv, self).__init__(*args, **kwargs)
@@ -288,7 +288,7 @@ class GatherEnv(ProxyEnv, Serializable):
                 new_objs.append(obj)
         self.objects = new_objs
         self.STEP +=1
-        done = len(self.objects) == 0 or self.STEP >= 1500
+        done = len(self.objects) == 0 or self.STEP >= 500
         # import pdb;pdb.set_trace()
 
 
